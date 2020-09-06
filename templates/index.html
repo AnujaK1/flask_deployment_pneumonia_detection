@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>ML Capstone</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+  $(document).ready(function () {
+	$("#btnPredict").click(function(){
+	formdata = new FormData();
+    if($("#imageFile").prop('files').length > 0)
+    {
+        file =$("#imageFile").prop('files')[0];
+        formdata.append("file", file);
+		formdata.append("abc","Anuja");
+		fileUpload(formdata);
+    }else
+	{
+	alert("Select file to upload first");
+	}
+	});	
+	$("#imageFile").change(function(){
+		$("#prediction_text").html("Prediction: Nothing Detected");
+	});
+	function fileUpload(data)
+	{
+	$.ajax({
+    url: "/predict",
+    type: "POST",
+    data: formdata,
+    processData: false,
+    contentType: false,
+    success: function (result) {
+		alert("Prediction: "+result.name);
+		$("#prediction_text").html("Prediction: "+result.name);
+	}
+});
+	}
+});
+  
+  </script>
+</head>
+
+<body>
+ <div class="main">
+	<h1 style="padding-top:30px;">
+	Pnumonia Detection - Model trained with RSNA dataset
+	</h1>
+	<h2>Capstone GL </h2>
+     <!-- Main Input For Receiving Query to our ML -->
+    <form>
+    	<input style="width: 50%;" type="file" id="imageFile" accept="image/*,.dcm"/>
+        <button id="btnPredict" type="submit" class="btn btn-primary">Upload & Predict</button>
+    </form>
+
+   <br>
+   <br>
+   <h3 id="prediction_text" color="white">Prediction: Nothing Detected</h3>
+
+ </div>
+</body>
+</html>
